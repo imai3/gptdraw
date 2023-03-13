@@ -103,6 +103,28 @@
 			isDrawing = false;
 		});
 
+		// タッチイベントリスナーを追加する
+		canvas.addEventListener("touchstart", (e) => {
+			e.preventDefault();
+			isDrawing = true;
+			[lastX, lastY] = [e.touches[0].clientX - canvas.offsetLeft, e.touches[0].clientY - canvas.offsetTop];
+		});
+
+		canvas.addEventListener("touchmove", (e) => {
+			e.preventDefault();
+			if (!isDrawing) return;
+			context.strokeStyle = color;
+			context.beginPath();
+			context.moveTo(lastX, lastY);
+			context.lineTo(e.touches[0].clientX - canvas.offsetLeft, e.touches[0].clientY - canvas.offsetTop);
+			context.stroke();
+			[lastX, lastY] = [e.touches[0].clientX - canvas.offsetLeft, e.touches[0].clientY - canvas.offsetTop];
+		});
+
+		canvas.addEventListener("touchend", () => {
+			isDrawing = false;
+		});
+
 		// キャンバスを拡大する
 		document.getElementById("zoom-in").addEventListener("click", () => {
 			zoom += 0.1;
