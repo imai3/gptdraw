@@ -104,10 +104,21 @@
 		});
 
 		// タッチイベントリスナーを追加する
+		function getTouchPos(evt) {
+			let rect = canvas.getBoundingClientRect();
+			let scaleX = canvas.width / rect.width;
+			let scaleY = canvas.height / rect.height;
+			let touch = evt.touches[0];
+			return [
+				(touch.clientX - rect.left) * scaleX,
+				(touch.clientY - rect.top) * scaleY
+			];
+		}
 		canvas.addEventListener("touchstart", (e) => {
 			e.preventDefault();
 			isDrawing = true;
-			[lastX, lastY] = [e.touches[0].clientX - canvas.offsetLeft, e.touches[0].clientY - canvas.offsetTop];
+			[lastX, lastY] = getTouchPos(e);
+			//[lastX, lastY] = [e.touches[0].clientX - canvas.offsetLeft, e.touches[0].clientY - canvas.offsetTop];
 		});
 
 		canvas.addEventListener("touchmove", (e) => {
@@ -116,9 +127,9 @@
 			context.strokeStyle = color;
 			context.beginPath();
 			context.moveTo(lastX, lastY);
-			context.lineTo(e.touches[0].clientX - canvas.offsetLeft, e.touches[0].clientY - canvas.offsetTop);
+			context.lineTo(getTouchPos(e)[0], getTouchPos(e)[1]);
 			context.stroke();
-			[lastX, lastY] = [e.touches[0].clientX - canvas.offsetLeft, e.touches[0].clientY - canvas.offsetTop];
+			[lastX, lastY] = getTouchPos(e);
 		});
 
 		canvas.addEventListener("touchend", () => {
