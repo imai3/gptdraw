@@ -34,12 +34,14 @@
 				<button id="color-yellow" style="background-color: yellow;"></button>
 				<button id="color-picker">色を選ぶ</button>
 			</div>
-			<button id="zoom-in">拡大</button>
-			<button id="zoom-out">縮小</button>
-			<button id="move-up">上に移動</button>
-			<button id="move-down">下に移動</button>
-			<button id="move-left">左に移動</button>
-			<button id="move-right">右に移動</button>
+			<div class="canvasmove">
+				<button id="zoom-in">拡大</button>
+				<button id="zoom-out">縮小</button>
+				<button id="move-up">上に移動</button>
+				<button id="move-down">下に移動</button>
+				<button id="move-left">左に移動</button>
+				<button id="move-right">右に移動</button>
+			</div>
 		</div>
 		<canvas id="canvas"></canvas>
 	</div>
@@ -54,6 +56,7 @@
 		let lastY = 0;
 		let zoom = 1;
 		let color = "#000000";
+		let canvasspace = 100;
 
 		// ボタンクリックイベントを処理する
 		document.getElementById("color-red").addEventListener("click", () => {
@@ -76,15 +79,13 @@
 		document.getElementById("color-picker").addEventListener("click", () => {
 			color = prompt("色を入力してください", color);
 		});
-
 		// マウスイベントリスナーを追加する
-
-		function drawstart(e) {
+		canvas.addEventListener("mousedown", (e) => {
 			isDrawing = true;
 			[lastX, lastY] = [e.offsetX, e.offsetY];
-		}
+		});
 
-		function drawing(e) {
+		canvas.addEventListener("mousemove", (e) => {
 			if (!isDrawing) return;
 			context.strokeStyle = color;
 			context.beginPath();
@@ -92,19 +93,15 @@
 			context.lineTo(e.offsetX, e.offsetY);
 			context.stroke();
 			[lastX, lastY] = [e.offsetX, e.offsetY];
-		}
+		});
 
-		function drawend(e) {
+		canvas.addEventListener("mouseup", () => {
 			isDrawing = false;
-		}
-		canvas.addEventListener("mousedown", drawstart);
-		canvas.addEventListener("mousemove", drawing);
-		canvas.addEventListener("mouseup", drawend);
-		canvas.addEventListener("mouseout", drawend);
-		window.addEventListener("touchstart", drawstart)
-		window.addEventListener("touchmove", drawing)
-		window.addEventListener("touchend", drawend)
+		});
 
+		canvas.addEventListener("mouseout", () => {
+			isDrawing = false;
+		});
 
 		// キャンバスを拡大する
 		document.getElementById("zoom-in").addEventListener("click", () => {
@@ -120,25 +117,25 @@
 
 		// キャンバスを上に移動する
 		document.getElementById("move-up").addEventListener("click", () => {
-			const currentTop = parseInt(canvas.style.top) || 100;
+			const currentTop = parseInt(canvas.style.top) || canvasspace;
 			canvas.style.top = `${currentTop - 10}px`;
 		});
 
 		// キャンバスを下に移動する
 		document.getElementById("move-down").addEventListener("click", () => {
-			const currentTop = parseInt(canvas.style.top) || 100;
+			const currentTop = parseInt(canvas.style.top) || canvasspace;
 			canvas.style.top = `${currentTop + 10}px`;
 		});
 
 		// キャンバスを左に移動する
 		document.getElementById("move-left").addEventListener("click", () => {
-			const currentLeft = parseInt(canvas.style.left) || 100;
+			const currentLeft = parseInt(canvas.style.left) || canvasspace;
 			canvas.style.left = `${currentLeft - 10}px`;
 		});
 
 		// キャンバスを右に移動する
 		document.getElementById("move-right").addEventListener("click", () => {
-			const currentLeft = parseInt(canvas.style.left) || 100;
+			const currentLeft = parseInt(canvas.style.left) || canvasspace;
 			canvas.style.left = `${currentLeft + 10}px`;
 		});
 	</script>
