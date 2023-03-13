@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+	<title>お絵描きアプリ</title>
+	<style>
+		.container {
+			position: relative;
+		}
+
+		canvas {
+			position: absolute;
+			top: 100px;
+			left: 100px;
+			border: 1px solid black;
+		}
+
+		.buttons {
+			position: absolute;
+			top: 0;
+			left: 0;
+			z-index: 1;
+		}
+	</style>
+</head>
+
+<body>
+	<div class="container">
+		<div class="buttons">
+			<div class="colors">
+				<button id="color-red" style="background-color: red;"></button>
+				<button id="color-blue" style="background-color: blue;"></button>
+				<button id="color-green" style="background-color: green;"></button>
+				<button id="color-yellow" style="background-color: yellow;"></button>
+				<button id="color-picker">色を選ぶ</button>
+			</div>
+			<button id="zoom-in">拡大</button>
+			<button id="zoom-out">縮小</button>
+			<button id="move-up">上に移動</button>
+			<button id="move-down">下に移動</button>
+			<button id="move-left">左に移動</button>
+			<button id="move-right">右に移動</button>
+		</div>
+		<canvas id="canvas"></canvas>
+	</div>
+
+	<script>
+		const canvas = document.getElementById("canvas");
+		const context = canvas.getContext("2d");
+
+		// 初期設定
+		let isDrawing = false;
+		let lastX = 0;
+		let lastY = 0;
+		let zoom = 1;
+		let color = "#000000";
+
+		// ボタンクリックイベントを処理する
+		document.getElementById("color-red").addEventListener("click", () => {
+			color = "red";
+		});
+
+		document.getElementById("color-blue").addEventListener("click", () => {
+			color = "blue";
+		});
+
+		document.getElementById("color-green").addEventListener("click", () => {
+			color = "green";
+		});
+
+		document.getElementById("color-yellow").addEventListener("click", () => {
+			color = "yellow";
+		});
+
+		// 色選択ダイアログを表示して、選択された色をcolor変数に代入する
+		document.getElementById("color-picker").addEventListener("click", () => {
+			color = prompt("色を入力してください", color);
+		});
+
+		// マウスイベントリスナーを追加する
+
+		function drawstart(e) {
+			isDrawing = true;
+			[lastX, lastY] = [e.offsetX, e.offsetY];
+		}
+
+		function drawing(e) {
+			if (!isDrawing) return;
+			context.strokeStyle = color;
+			context.beginPath();
+			context.moveTo(lastX, lastY);
+			context.lineTo(e.offsetX, e.offsetY);
+			context.stroke();
+			[lastX, lastY] = [e.offsetX, e.offsetY];
+		}
+
+		function drawend(e) {
+			isDrawing = false;
+		}
+		canvas.addEventListener("mousedown", drawstart);
+		canvas.addEventListener("mousemove", drawing);
+		canvas.addEventListener("mouseup", drawend);
+		canvas.addEventListener("mouseout", drawend);
+		window.addEventListener("touchstart", drawstart)
+		window.addEventListener("touchmove", drawing)
+		window.addEventListener("touchend", drawend)
+
+
+		// キャンバスを拡大する
+		document.getElementById("zoom-in").addEventListener("click", () => {
+			zoom += 0.1;
+			canvas.style.transform = `scale(${zoom})`;
+		});
+
+		// キャンバスを縮小する
+		document.getElementById("zoom-out").addEventListener("click", () => {
+			zoom -= 0.1;
+			canvas.style.transform = `scale(${zoom})`;
+		});
+
+		// キャンバスを上に移動する
+		document.getElementById("move-up").addEventListener("click", () => {
+			const currentTop = parseInt(canvas.style.top) || 100;
+			canvas.style.top = `${currentTop - 10}px`;
+		});
+
+		// キャンバスを下に移動する
+		document.getElementById("move-down").addEventListener("click", () => {
+			const currentTop = parseInt(canvas.style.top) || 100;
+			canvas.style.top = `${currentTop + 10}px`;
+		});
+
+		// キャンバスを左に移動する
+		document.getElementById("move-left").addEventListener("click", () => {
+			const currentLeft = parseInt(canvas.style.left) || 100;
+			canvas.style.left = `${currentLeft - 10}px`;
+		});
+
+		// キャンバスを右に移動する
+		document.getElementById("move-right").addEventListener("click", () => {
+			const currentLeft = parseInt(canvas.style.left) || 100;
+			canvas.style.left = `${currentLeft + 10}px`;
+		});
+	</script>
+</body>
+
+</html>
