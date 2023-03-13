@@ -12,6 +12,8 @@
 			position: absolute;
 			top: 100px;
 			left: 100px;
+			height: 500px;
+			width: 500px;
 			border: 1px solid black;
 		}
 
@@ -28,10 +30,10 @@
 	<div class="container">
 		<div class="buttons">
 			<div class="colors">
-				<button id="color-red" style="background-color: red;"></button>
-				<button id="color-blue" style="background-color: blue;"></button>
-				<button id="color-green" style="background-color: green;"></button>
-				<button id="color-yellow" style="background-color: yellow;"></button>
+				<button id="color-red" style="background-color: #000000;"></button>
+				<button id="color-blue" style="background-color: #404040;"></button>
+				<button id="color-green" style="background-color: #808080;"></button>
+				<button id="color-yellow" style="background-color: #959595;"></button>
 				<button id="color-picker">色を選ぶ</button>
 			</div>
 			<div class="canvasmove">
@@ -41,6 +43,7 @@
 				<button id="move-down">下に移動</button>
 				<button id="move-left">左に移動</button>
 				<button id="move-right">右に移動</button>
+				<button id="reset">リセット</button>
 			</div>
 		</div>
 		<canvas id="canvas"></canvas>
@@ -60,19 +63,19 @@
 
 		// ボタンクリックイベントを処理する
 		document.getElementById("color-red").addEventListener("click", () => {
-			color = "red";
+			color = "#000000";
 		});
 
 		document.getElementById("color-blue").addEventListener("click", () => {
-			color = "blue";
+			color = "#404040";
 		});
 
 		document.getElementById("color-green").addEventListener("click", () => {
-			color = "green";
+			color = "#808080";
 		});
 
 		document.getElementById("color-yellow").addEventListener("click", () => {
-			color = "yellow";
+			color = "#909090";
 		});
 
 		// 色選択ダイアログを表示して、選択された色をcolor変数に代入する
@@ -170,6 +173,13 @@
 		document.getElementById("move-right").addEventListener("click", () => {
 			const currentLeft = parseInt(canvas.style.left) || canvasspace;
 			canvas.style.left = `${currentLeft + 10}px`;
+		});
+
+		document.getElementById("reset").addEventListener("click", () => {
+			zoom = 1.0;
+			canvas.style.transform = `scale(${zoom})`;
+			canvas.style.left = `${canvasspace + 10}px`;
+			canvas.style.top = `${canvasspace + 10}px`;
 		});
 	</script>
 </body>
